@@ -10,7 +10,6 @@ require "debugger" if development?
 
 configure do
   set :public_folder, Proc.new { File.join(root, "static") }
-  enable :sessions
   set :neo, Proc.new {development? ? (Neography::Rest.new) : Neography::Rest.new(ENV['NEOGRAPHY_URI'])}
   set :bind, '0.0.0.0'
 end
