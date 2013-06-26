@@ -1,0 +1,19 @@
+%div
+  %h1 Flight demo Beta!
+  %h3
+    About flight demo?
+  %h4
+    TBD: Explain the purpose of this demo
+    Search two cities
+
+
+%form.form-inline{:action => ""}
+  %label{:for => "selectList"} From
+  %input#fromSelect{:type => 'text', 'data-provide' => 'typeahead'}
+
+  %label{:for => "selectList"} To
+  %input#toSelect{:type => 'text', 'data-provide' => 'typeahead'}
+
+  %button.btn.btn-primary{:id => 'search', :disabled => true, :type => "button"} Search!
+
+%table.table#result
