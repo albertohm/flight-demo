@@ -25,8 +25,8 @@ $(document).ready ->
       fromCity = $('input#fromSelect').val().split(' - ')[0]
       toCity = $('input#toSelect').val().split(' - ')[0]
 
-      query = "START from_air=node:node_auto_index(name='Gran Canaria'),
-      to_air=node:node_auto_index(name='Barcelona')
+      query = "START from_air=node:node_auto_index(name='#{fromCity}'),
+      to_air=node:node_auto_index(name='#{toCity}')
       MATCH  p=(from_air)-[:VIA|TO*2..4]->(to_air)
       WITH (length(rels(p))/2-1) AS Stops, from_air, to_air, FILTER(x in p: has(x.airline)) as raw_routes,
       FILTER(x in TAIL(p): has(x.name)) AS raw_airports
