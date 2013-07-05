@@ -1,12 +1,9 @@
 $(document).ready ->
 
   prepareForm = ->
-    query = "START n=node:node_auto_index(type='Airport')
-    RETURN n.name as Name, n.country as Country, n.iata_faa as Code;"
     $.ajax(
-      url: "/api/v1/launch_cypher"
-      type: "POST"
-      data: { query }
+      url: "/api/v1/prepare_selects"
+      type: "GET"
       dataType: 'json',
       success: (data) ->
         resultList = data.result.data.map( (item) ->
@@ -22,22 +19,13 @@ $(document).ready ->
 
     $('button#search').click ->
       $('table#result').find('tr').remove()
-      fromCity = $('input#fromSelect').val().split(' - ')[0]
-      toCity = $('input#toSelect').val().split(' - ')[0]
-
-      query = "START from_air=node:node_auto_index(name='#{fromCity}'),
-      to_air=node:node_auto_index(name='#{toCity}')
-      MATCH  p=(from_air)-[:VIA|TO*2..4]->(to_air)
-      WITH (length(rels(p))/2-1) AS Stops, from_air, to_air, FILTER(x in p: has(x.airline)) as raw_routes,
-      FILTER(x in TAIL(p): has(x.name)) AS raw_airports
-      RETURN from_air.name AS From, extract(n in raw_airports : n.name) as Airports,
-      extract(n in raw_routes : n.airline) as Route,
-      to_air.name AS To, Stops ORDER BY Stops LIMIT 50;"
+      fromAirport = $('input#fromSelect').val().split(' - ')[0]
+      toAirport = $('input#toSelect').val().split(' - ')[0]
 
       $.ajax(
-        url: "/api/v1/launch_cypher"
+        url: "/api/v1/search_airports"
         type: "POST"
-        data: { query }
+        data: { from: fromAirport, to: toAirport }
         success: (data) ->
 
           table = $('table#result')
