@@ -32,15 +32,15 @@ get '/api/v1/prepare_selects' do
 end
 
 post '/api/v1/search_airports' do
-  query = "START from_air=node:node_auto_index(name='#{params[:from]}'),
-  to_air=node:node_auto_index(name='#{params[:to]}')
+  query = "START from_air=node:node_auto_index(name={from}),
+  to_air=node:node_auto_index(name={to})
   MATCH  p=(from_air)-[:VIA|TO*2..4]->(to_air)
   WITH (length(rels(p))/2-1) AS Stops, from_air, to_air, FILTER(x in p: has(x.airline)) as raw_routes,
   FILTER(x in TAIL(p): has(x.name)) AS raw_airports
   RETURN from_air.name AS From, extract(n in raw_airports : n.name) as Airports,
   extract(n in raw_routes : n.airline) as Route,
   to_air.name AS To, Stops ORDER BY Stops LIMIT 50;"
-  result = settings.neo.execute_query(query)
+  result = settings.neo.execute_query(query, {:from => params[:from], :to => params[:to]})
   response = {:result => result}
   json response
 end
