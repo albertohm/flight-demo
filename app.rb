@@ -40,7 +40,7 @@ post '/api/v1/search_airports' do
   RETURN from_air.name AS From, extract(n in raw_airports : n.name) as Airports,
   extract(n in raw_routes : n.airline) as Route,
   to_air.name AS To, Stops ORDER BY Stops LIMIT 50;"
-  result = settings.neo.execute_query(query, {:from => params[:from], :to => params[:to]})
+  result = settings.neo.execute_query(query, {from: params[:from], to: params[:to]})
   response = {:result => result}
   json response
 end
